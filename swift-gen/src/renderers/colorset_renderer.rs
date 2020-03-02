@@ -11,16 +11,26 @@ impl Renderer for ColorSetRenderer {
     d.push_str("\n");
     d.push_str("import UIKit\n");
     d.push_str("\n");
+    d.push_str("//swiftlint:disable force_unwrapping\n");
     d.push_str("extension UIColor {\n");
-    self.render_ruleset_into(ruleset, d, config);
+    self.render_first_ruleset_into(ruleset, d, config);
     d.push_str("}\n");
   }
 }
 
 impl ColorSetRenderer {
+  fn render_first_ruleset_into(&self, ruleset: &RuleSet, d: &mut String, config: &RendererConfig) {
+    for item in &ruleset.items {
+      match item {
+        RuleSetItem::Declaration(decl) => self.render_declaration_into(decl, d, config), 
+        RuleSetItem::RuleSet(ruleset) => self.render_ruleset_into(ruleset, d, config)
+      }
+    }
+  }
+
   fn render_ruleset_into(&self, ruleset: &RuleSet, d: &mut String, config: &RendererConfig) {
     d.push_str(&format!(
-      "{}enum {} {{\n",
+      "\n{}enum {} {{\n",
       config.indent(ruleset.identifier.depth),
       ruleset.identifier.short
     ));

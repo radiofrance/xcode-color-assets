@@ -127,7 +127,7 @@ impl Identifier {
     Identifier {
       short: "Custom".to_string(),
       full: "".to_string(),
-      depth: 1,
+      depth: 0,
     }
   }
 
